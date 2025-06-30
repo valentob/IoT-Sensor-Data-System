@@ -172,10 +172,3 @@ To get this system up and running on your local machine:
     ```bash
     docker-compose down
     ```
-
-## Notes
-
-* The system uses the Haversine formula for distance calculations
-* Sensor locations are specified in latitude and longitude
-* Data is persisted in a SQLite database
-````
