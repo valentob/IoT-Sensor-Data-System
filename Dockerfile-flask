@@ -1,0 +1,16 @@
+
+FROM python:3.8-slim
+
+
+WORKDIR /app
+
+
+COPY app.py .
+COPY database_setup.py .
+COPY iot_data.db .
+
+
+RUN pip install flask flask_sqlalchemy
+
+
+CMD ["python", "app.py"]

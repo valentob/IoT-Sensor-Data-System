@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  flask_app:
+    build:
+      context: .
+      dockerfile: Dockerfile-flask
+    container_name: flask_app
+    ports:
+      - "5000:5000"
+    networks:
+      - iot_network
+
+  sensor1:
+    build: .
+    container_name: sensor1
+    environment:
+      SENSOR_ID: 1
+      SENSOR_TYPE: "Temperature"
+      API_URL: "http://flask_app:5000/store"
+    depends_on:
+      - flask_app
+    networks:
+      - iot_network
+
+  sensor2:
+    build: .
+    container_name: sensor2
+    environment:
+      SENSOR_ID: 2
+      SENSOR_TYPE: "Pressure"
+      API_URL: "http://flask_app:5000/store"
+    depends_on:
+      - flask_app
+    networks:
+      - iot_network
+
+  hadoop:
+    image: bde2023/hadoop-resourcemanager-aarch64:2.0.0-hadoop3.3.5-java11
+    container_name: hadoop
+    hostname: hadoop
+    networks:
+      - iot_network
+    environment:
+      - CLUSTER_NAME=iot-hadoop-cluster
+    command: ["/bin/bash", "-c", "while true; do sleep 30; done;"]
+
+networks:
+  iot_network:
+    driver: bridge
